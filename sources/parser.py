@@ -11,10 +11,19 @@ class Parser:
     ClosePath: Z, z
     """
 
-    # Class properties
+    # Private class properties
 
-    word_set = "[aAcChHlLmMqQsStTvVzZ]"
-    digit = r"([-|+]?(([0-9]*\.[0-9]+)|([0-9]+)))"
+    __word_set = "[aAcChHlLmMqQsStTvVzZ]"
+    __digit = r"([-|+]?(([0-9]*\.[0-9]+)|([0-9]+)))"
+
+    __commands = {
+        "move": "mM",
+        "line": "lLhHvV",
+        "cubic": "cCsS",
+        "quadratic": "qQtT",
+        "elliptical": "aA",
+        "close": "zZ"
+    }
 
     # Public methods
 
@@ -27,51 +36,110 @@ class Parser:
 
         normalized_input = self.__normalize_input(svg_description)
         split_input = self.__split_input(normalized_input)
-
-        return split_input
+        commands = [self.__split_command(i) for i in split_input]
+        return commands
 
     # Private static methods
 
     @staticmethod
     def __normalize_input(string):
-        return "".join(string.rstrip().split())
+        normalized = []
+        for index in range(len(string)):
+            if string[index] != ' ':
+                normalized += string[index]
+            elif not string[index-1].isalpha() and string[index-1] != ',':
+                normalized += ','
+
+        return "".join(normalized)
 
     @staticmethod
-    def __find_first_occurrence(split_symbols, string):
-        if len(string) <= 1:
-            return 0
+    def __find_command(split_symbols, string):
+        if not string or not string[0].isalpha():
+            ValueError("Input string is empty or incorrect!")
 
-        match = re.search(split_symbols, string[1:])
-
-        if not match:
-            return 0
+        if len(string) == 1:
+            return string, None
         else:
-            return match.start() + 1
+            match = re.search(split_symbols, string[1:])
+
+            # last command
+            if not match:
+                return string, None
+            else:
+                return string[:match.start()+1], string[match.start()+1:]
 
     @staticmethod
     def __group_values(input_list, n):
         return list(zip(*[input_list[i::n] for i in range(n)]))
 
-        # Private methods
+    # Private methods
 
     def __split_input(self, string):
         command_list = []
         string = string
 
-        while len(string) > 1:
-            alpha_pos = self.__find_first_occurrence(self.word_set, string)
-            command_list.append(string[:alpha_pos])
-            string = string[alpha_pos:]
+        command, string = self.__find_command(self.__word_set, string)
+        command_list.append(command)
 
-        command_list.append(string)
+        while string:
+            command, string = self.__find_command(self.__word_set, string)
+            command_list.append(command)
+
         return command_list
 
-    def __split_command(self):
-        pass
-
-    def __split_moveTo(self, string):
-        if string[0] not in "mM":
+    def __split_move_to(self, string):
+        if string[0] not in self.__commands["move"]:
             raise ValueError("Wrong command passed")
-        values_found = [group[0] for group in re.findall(self.digit, string)]
-        grouped_values = self.__group_values(values_found, 2)
-        return [string[0], [(float(x), float(y)) for x, y in grouped_values]]
+
+        return [string[0], self.__find_digits_in_groups(string, group_size=2)]
+
+    def __split_line_to(self, string):
+        if string[0] not in self.__commands["line"]:
+            raise ValueError("Wrong command passed")
+
+        group_size = 2 if string[0] in self.__commands["line"][:2] else 1
+        return [string[0], self.__find_digits_in_groups(string, group_size=group_size)]
+
+    def __split_cubic_bezier_curve(self, string):
+        if string[0] not in self.__commands["cubic"]:
+            raise ValueError("Wrong command passed")
+
+        group_size = 6 if string[0] in self.__commands["cubic"][:2] else 4
+        return [string[0], self.__find_digits_in_groups(string, group_size=group_size)]
+
+    def __split_quadratic_curve(self, string):
+        if string[0] not in self.__commands["quadratic"]:
+            raise ValueError("Wrong command passed")
+
+        group_size = 4 if string[0] in self.__commands["quadratic"][:2] else 2
+        return [string[0], self.__find_digits_in_groups(string, group_size=group_size)]
+
+    def __split_elliptical_curve(self, string):
+        if string[0] not in self.__commands["elliptical"]:
+            raise ValueError("Wrong command passed")
+
+        group_size = 7
+        return [string[0], self.__find_digits_in_groups(string, group_size=group_size)]
+
+    def __find_digits_in_groups(self, string, group_size=2, pattern=__digit):
+        values_found = [group[0] for group in re.findall(pattern, string)]
+        if len(values_found) % group_size != 0:
+            raise ValueError("Can not be grouped. Total number is {}".format(values_found))
+        grouped_values = self.__group_values(values_found, group_size)
+        return [tuple(map(float, group)) for group in grouped_values]
+
+    def __split_command(self, string):
+        command = string[0]
+
+        if command in self.__commands["move"]:
+            return self.__split_move_to(string)
+        elif command in self.__commands["line"]:
+            return self.__split_line_to(string)
+        elif command in self.__commands["cubic"]:
+            return self.__split_cubic_bezier_curve(string)
+        elif command in self.__commands["quadratic"]:
+            return self.__split_quadratic_curve(string)
+        elif command in self.__commands["elliptical"]:
+            return self.__split_elliptical_curve(string)
+        elif command in self.__commands["close"]:
+            return [command, None]
