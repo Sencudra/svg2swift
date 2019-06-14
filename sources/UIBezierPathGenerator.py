@@ -1,5 +1,8 @@
 from sources.parser import Parser
 
+# TODO: make functions much simpler
+# TODO: make a class or struct for x and y
+
 
 class UIBezierPathGenerator:
 
@@ -7,7 +10,7 @@ class UIBezierPathGenerator:
 
     def __init__(self):
         self.__parser = Parser()
-        self.__current_pos = [0, 0]
+        self.__current_pos = [0.0, 0.0]
 
     def generate(self, svg):
 
@@ -40,25 +43,57 @@ class UIBezierPathGenerator:
                 raise ValueError("Type is incorrect")
         return output
 
-    def __generate_line_to(self, command, type="absolute", ):
+    def __generate_line_to(self, command, coords='absolute'):
         """ Generate string output for line command. """
         if not command:
             raise ValueError("Command is empty")
         output = []
 
         for x, y in command:
-            if type == "absolute":
-                output.append(self.__print_move_to(x, y))
-            elif type == "relative":
+            if coords == "absolute":
+                output.append(self.__print_add_line(x, y))
+            elif coords == "relative":
                 self.__update_current_pos(x, y)
-                output.append(self.__print_move_to(
+                output.append(self.__print_add_line(
                     self.__current_pos[0],
                     self.__current_pos[1]))
             else:
                 raise ValueError("Type is incorrect")
         return output
 
+    def __generate_horizontal_line_to(self, command, coords='absolute'):
+        if not command:
+            raise ValueError("Command is empty")
+        output = []
 
+        for x, in command:
+            if coords == "absolute":
+                output.append(self.__print_add_line(x, self.__current_pos[1]))
+            elif coords == "relative":
+                self.__update_current_pos(x, 0.0)
+                output.append(self.__print_add_line(
+                    self.__current_pos[0],
+                    self.__current_pos[1]))
+            else:
+                raise ValueError("Type is incorrect")
+        return output
+
+    def __generate_vertical_line_to(self, command, coords='absolute'):
+        if not command:
+            raise ValueError("Command is empty")
+        output = []
+
+        for y, in command:
+            if coords == "absolute":
+                output.append(self.__print_add_line(self.__current_pos[0], y))
+            elif coords == "relative":
+                self.__update_current_pos(0, y)
+                output.append(self.__print_add_line(
+                    self.__current_pos[0],
+                    self.__current_pos[1]))
+            else:
+                raise ValueError("Type is incorrect")
+        return output
 
     def __print_move_to(self, x, y):
         return "path.move(to: CGPoint(x: {}, y: {}))".format(x, y)

@@ -43,13 +43,13 @@ class Parser:
 
     @staticmethod
     def __normalize_input(string):
+        """ Removing space characters and controlling commas """
         normalized = []
         for index in range(len(string)):
             if string[index] != ' ':
                 normalized += string[index]
             elif not string[index-1].isalpha() and string[index-1] != ',':
                 normalized += ','
-
         return "".join(normalized)
 
     @staticmethod
@@ -90,34 +90,29 @@ class Parser:
     def __split_move_to(self, string):
         if string[0] not in self.__commands["move"]:
             raise ValueError("Wrong command passed")
-
         return [string[0], self.__find_digits_in_groups(string, group_size=2)]
 
     def __split_line_to(self, string):
         if string[0] not in self.__commands["line"]:
             raise ValueError("Wrong command passed")
-
         group_size = 2 if string[0] in self.__commands["line"][:2] else 1
         return [string[0], self.__find_digits_in_groups(string, group_size=group_size)]
 
     def __split_cubic_bezier_curve(self, string):
         if string[0] not in self.__commands["cubic"]:
             raise ValueError("Wrong command passed")
-
         group_size = 6 if string[0] in self.__commands["cubic"][:2] else 4
         return [string[0], self.__find_digits_in_groups(string, group_size=group_size)]
 
     def __split_quadratic_curve(self, string):
         if string[0] not in self.__commands["quadratic"]:
             raise ValueError("Wrong command passed")
-
         group_size = 4 if string[0] in self.__commands["quadratic"][:2] else 2
         return [string[0], self.__find_digits_in_groups(string, group_size=group_size)]
 
     def __split_elliptical_curve(self, string):
         if string[0] not in self.__commands["elliptical"]:
             raise ValueError("Wrong command passed")
-
         group_size = 7
         return [string[0], self.__find_digits_in_groups(string, group_size=group_size)]
 
