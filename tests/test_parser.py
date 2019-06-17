@@ -1,7 +1,7 @@
 import pytest
 
 from tests.helper import show_name
-from sources.parser import Parser
+from source.parser import Parser
 
 
 class TestParser:
