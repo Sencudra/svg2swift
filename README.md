@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/Sencudra/svg2swift.svg?token=HJY9g7GV3JgmsxHL3fqK&branch=master)](https://travis-ci.com/Sencudra/svg2swift)
+[![codebeat badge](https://codebeat.co/badges/d6c77aa8-44a9-4969-8648-c3540ee82b32)](https://codebeat.co/projects/github-com-sencudra-svg2swift-master)
 
 ## SVG-to-Swift converter
 
