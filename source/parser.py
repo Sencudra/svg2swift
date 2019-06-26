@@ -126,7 +126,6 @@ class Parser:
 
     def __split_command(self, string):
         command = string[0]
-
         if command in self.commands["move"]:
             return self.__split_move_to(string)
         elif command in self.commands["line"]:
@@ -138,4 +137,4 @@ class Parser:
         elif command in self.commands["elliptical"]:
             return self.__split_elliptical_curve(string)
         elif command in self.commands["close"]:
-            return [command, None]
+            return [(command, (None,))]

@@ -137,7 +137,6 @@ class UIBezierPathGenerator:
 
     def __generate_cubic_smooth_curve(self, command, coords=CoordinateSystem.ABSOLUTE):
         """Generates string output for cubic smooth curve command"""
-
         first_control_point = 2 * self.__current_pos - self.__last_cubic_control_point
         second_control_point = Point(command[0], command[1])
         end_point = Point(command[2], command[3])
@@ -153,7 +152,6 @@ class UIBezierPathGenerator:
 
     def __generate_quadratic_curve(self, command, coords=CoordinateSystem.ABSOLUTE):
         """Generates string output for quadratic curve command"""
-
         control_point = Point(command[0], command[1])
         end_point = Point(command[2], command[3])
 
@@ -169,7 +167,6 @@ class UIBezierPathGenerator:
 
     def __generate_quadratic_smooth_curve(self, command, coords=CoordinateSystem.ABSOLUTE):
         """Generates string output for smooth quadratic curve command"""
-
         end_point = Point(command[0], command[1])
         control_point = 2 * self.__current_pos - self.__last_quadratic_control_point
 
@@ -207,7 +204,7 @@ class UIBezierPathGenerator:
         _ = argc
         return self.__print_close()
 
-    # Static methods
+    # Private static methods
 
     @staticmethod
     def __print_move_to(end_point: Point):
