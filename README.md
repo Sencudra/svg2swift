@@ -1,11 +1,13 @@
-### SVG-to-Swift converter
+[![Build Status](https://travis-ci.com/Sencudra/svg2swift.svg?token=HJY9g7GV3JgmsxHL3fqK&branch=master)](https://travis-ci.com/Sencudra/svg2swift)
 
-#### Overview
+## SVG-to-Swift converter
+
+### Overview
 Simple and light script to convert svg ```d``` attribute
 path to ```UIBezierPath``` Swift code description. See example 
 below for more details.
 
-#### Usage
+### Usage
 
 Execute command:
 
@@ -13,7 +15,7 @@ Execute command:
 svg2swift.py [-h] --input_file INPUT_FILE [--output_file OUTPUT_FILE]
 ```
 
-#### Example
+### Example
 
 Suppose we have following svg image of github:
 
