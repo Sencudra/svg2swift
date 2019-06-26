@@ -1,14 +1,10 @@
 language: python
-matrix:
-    include:
-        - name: "Python 3.7 on Xenial Linux"
-        python: 3.7
-        dist: xenial
-
+python:
+  - "3.7"
+  dist: xenial
 # command to install dependencies
 install:
-  - pip3 install --upgrade pip
-  - pip3 install -r requirements.txt
-  - pip3 install .
+  - pip install -r requirements.txt
+  - pip install .
 # command to run tests
 script: pytest
