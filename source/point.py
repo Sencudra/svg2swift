@@ -47,3 +47,12 @@ class Point:
 
     def __rmul__(self, other):
         return self.__mul__(other)
+
+    def __truediv__(self, other):
+        if not isinstance(other, Point):
+            return Point(self.x / other, self.y / other)
+        else:
+            raise TypeError
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
