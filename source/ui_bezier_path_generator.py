@@ -40,14 +40,16 @@ class UIBezierPathGenerator:
         """Generates and returns Swift Code for UIBezierPath"""
         script = ["path = UIBezierPath()"]
         parsed_data = self.__parser.parse_svg(svg)
+        specifier = ""
 
         for command in parsed_data:
 
-            specifier = command[0]
-            if specifier not in self.__parser.commands['cubic'] or \
+            if specifier not in self.__parser.commands['cubic'] and \
                specifier not in self.__parser.commands['quadratic']:
                 self.__update_last_cubic_control_point(self.__current_pos)
                 self.__update_last_quadratic_control_point(self.__current_pos)
+
+            specifier = command[0]
 
             if specifier.isupper():
                 coordinate_system = CoordinateSystem.ABSOLUTE
@@ -148,6 +150,7 @@ class UIBezierPathGenerator:
             raise WrongCoordinateSystem()
 
         self.__update_current_pos(end_point)
+        self.__update_last_cubic_control_point(second_control_point)
         return self.__print_cubic(end_point, first_control_point, second_control_point)
 
     def __generate_quadratic_curve(self, command, coords=CoordinateSystem.ABSOLUTE):
