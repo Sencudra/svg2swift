@@ -115,7 +115,8 @@ path.addCurve(to: CGPoint(x: 74.0, y: 0.0), controlPoint1: CGPoint(x: 148.0, y: 
 Yes, it's rather messy and complicated. Otherwise, it's perfect for rare im-app usage instead of importing
 large library.
 
-![will be added later]()
+<img src="Media/github.png" width="400">
+
 
 Copyright © 2019, Vlad Tarasevich
 
