@@ -68,7 +68,7 @@ class UIBezierPathGenerator:
         self.__last_cubic_control_point = point
 
     def __update_current_pos(self, point: Point):
-        self.__current_pos += point
+        self.__current_pos = point
 
     def __generate_move_to(self, command, coords=CoordinateSystem.ABSOLUTE):
         """Generates string output for move commands"""
