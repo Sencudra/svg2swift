@@ -112,10 +112,10 @@ path.addCurve(to: CGPoint(x: 148.0, y: 75.9), controlPoint1: CGPoint(x: 126.8, y
 path.addCurve(to: CGPoint(x: 74.0, y: 0.0), controlPoint1: CGPoint(x: 148.0, y: 34.0), controlPoint2: CGPoint(x: 114.9, y: 0.0))
 ```
 
-Yes, it's rather messy and complicated. Otherwise, it's perfect for rare im-app usage instead of importing
+Yes, it's rather messy and complicated. Otherwise, it's perfect for rare in-app usage instead of importing
 large library.
 
-<img src="Media/github.png" width="400">
+<img src="media/github.PNG" width="200">
 
 
 Copyright © 2019, Vlad Tarasevich
