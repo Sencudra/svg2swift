@@ -181,7 +181,12 @@ class UIBezierPathGenerator:
 
     def __generate_elliptical_curve(self, command, coords=CoordinateSystem.ABSOLUTE):
         """Generates string output for elliptical curve command"""
-        radius = Point(command[0], command[1])
+
+        if command[0] != command[1]:
+            raise NotImplementedError("Sorry, but a/A command with different x/y radius not implemented yet.")
+
+        radius = command[0]
+
         # angle = command[2]
         # large_arc_flag = command[3]
         sweep_flag = 'true' if command[4] == 1 else 'false'
@@ -192,10 +197,12 @@ class UIBezierPathGenerator:
         elif coords != CoordinateSystem.ABSOLUTE:
             raise WrongCoordinateSystem()
 
+        center_point = (end_point + self.__current_pos) / 2
+
         self.__update_current_pos(end_point)
         return self.__print_elliptical(
-            end_point,
-            radius.x,
+            center_point,
+            radius,
             0.0,
             360.0,
             sweep_flag)
